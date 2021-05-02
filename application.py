@@ -9,8 +9,8 @@ from linebot.models import (
 )
 import os
 
-LINE_SECRET = os.getenv(secert)
-LINE_TOKEN = os.getenv(token)
+LINE_SECRET = os.getenv("secert")
+LINE_TOKEN = os.getenv("token")
 LINE_BOT = LineBotApi(LINE_TOKEN)
 HANDLER = WebhookHandler(LINE_SECRET)
 
