@@ -7,13 +7,20 @@ from linebot.models import (
     TextSendMessage,
     FlexSendMessage
 )
+import os
+
+LINE_SECRET = os.getenv(secert)
+LINE_TOKEN = os.getenv(token)
+LINE_BOT = LineBotApi(LINE_TOKEN)
+HANDLER = WebhookHandler(LINE_SECRET)
 
 app = Flask(__name__)
 
-LINE_SECRET = "1416ba6268b14b2843a5d0972b5eaae7"
-LINE_TOKEN = "lQsLvMfbmHOXXexZevxqeFBA/kAB1s2/ch56Jutm0zLzFNxO8HYhx4elnsqxr2vh4MfPfCqww9w1P1p5LZYvu2MCA+FU6ruzNQHhS6oEFvzKzuFTHhUmNjLJLDQxjztq/IXsmZgIArNhG+k8xKwVlwdB04t89/1O/w1cDnyilFU="
-LINE_BOT = LineBotApi(LINE_TOKEN)
-HANDLER = WebhookHandler(LINE_SECRET)
+
+@app.route('/')
+def hello():
+    return "hello world!"
+
 
 
 @app.route("/callback", methods=["POST"])
