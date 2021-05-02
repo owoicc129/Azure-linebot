@@ -7,5 +7,5 @@ app = flask.Flask(__name__)
 def home():
     return "<h1>Hello Flask!</h1>"
 
-
-app.run()
+if __name__=='__main__':
+    app.run()
