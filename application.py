@@ -16,10 +16,10 @@ LINE_BOT = LineBotApi(LINE_TOKEN)
 HANDLER = WebhookHandler(LINE_SECRET)
 
 #Azure
-KEY = os.getenv("Azure_face_key") 
-ENDPOINT = os.getenv("Azure_face_Endpoint")  
-FACE_CLIENT = FaceClient(
-  ENDPOINT, CognitiveServicesCredentials(KEY))
+#KEY = os.getenv("Azure_face_key") 
+#ENDPOINT = os.getenv("Azure_face_Endpoint")  
+#FACE_CLIENT = FaceClient(
+#  ENDPOINT, CognitiveServicesCredentials(KEY))
 
 #Imgur
 IMGUR_CONFIG = {
