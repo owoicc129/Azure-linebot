@@ -44,7 +44,34 @@ IMGUR_CONFIG = {
 }
 IMGUR_CLIENT = Imgur(config=IMGUR_CONFIG)
 
+#--def----------------------------------------------------
 
+def azure_face_recognition(filename):
+    img = open(filename, "r+b")
+    detected_face = FACE_CLIENT.face.detect_with_stream(img, detection_model="detection_01")
+    # 多於一張臉的情況
+    if len(detected_face) != 1:
+        return ""
+    results = FACE_CLIENT.face.identify([detected_face[0].face_id], PERSON_GROUP_ID)
+    # 沒有結果的情況
+    if len(results) == 0:
+        return "unknown"
+
+    result = results[0].as_dict()
+    # 找不到相像的人
+    if len(result["candidates"]) == 0:
+        return "unknown"
+    # 雖然有類似的人，但信心程度太低
+    if result["candidates"][0]["confidence"] < 0.5:
+        return "unknown"
+        
+    person = FACE_CLIENT.person_group_person.get(PERSON_GROUP_ID, result["candidates"][0]["person_id"])
+    return person.name
+
+
+
+
+#--linebot-------------------------------
 
 app = Flask(__name__)
 
@@ -102,8 +129,28 @@ def handle_content_message(event):
     image = IMGUR_CLIENT.image_upload(filename, "", "")
     link = image["response"]["data"]["link"]
     
-    # 回覆訊息[test]
-    LINE_BOT.reply_message(event.reply_token, TextSendMessage(text=link))
+    
+    name = azure_face_recognition(filename)
+    if name != "": # 如果只有一張人臉，輸出人臉辨識結果
+        now = datetime.now(timezone(timedelta(hours=8))).\
+        strftime("%Y-%m-%d %H:%M") # 注意時區
+        output = "{0}, {1}".format(name, now)
+        
+    # else:
+    #     plate = azure_ocr(link)
+    #     link_ob = azure_object_detection(link, filename)
+    #     # 有車牌就輸出車牌
+    #     if len(plate) > 0:
+    #         output = "License Plate: {}".format(plate)
+    #     # 沒有車牌就就輸出影像描述的結果
+    #     else:
+    #         output = azure_describe(link)
+    #     link = link_ob
+    
+    
+    
+    # 回覆訊息[test get url ok!]
+    LINE_BOT.reply_message(event.reply_token, TextSendMessage(text=output))
     
     
     
