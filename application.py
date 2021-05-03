@@ -9,10 +9,28 @@ from linebot.models import (
 )
 import os
 
+#Line
 LINE_SECRET = os.getenv("secert")
 LINE_TOKEN = os.getenv("token")
 LINE_BOT = LineBotApi(LINE_TOKEN)
 HANDLER = WebhookHandler(LINE_SECRET)
+
+#Azure
+KEY = os.getenv("Azure_face_key") 
+ENDPOINT = os.getenv("Azure_face_Endpoint")  
+FACE_CLIENT = FaceClient(
+  ENDPOINT, CognitiveServicesCredentials(KEY))
+
+#Imgur
+IMGUR_CONFIG = {
+  "client_id": os.getenv("imgur_client_id"),
+  "client_secret": os.getenv("imgur_client_secret"),
+  "access_token": os.getenv("imgur_access_token"),
+  "refresh_token": os.getenv("imgur_refresh_token")
+}
+IMGUR_CLIENT = Imgur(config=IMGUR_CONFIG)
+
+
 
 app = Flask(__name__)
 
@@ -51,6 +69,33 @@ def handle_message(event):
         message = TextSendMessage(text=event.message.text)
 # 回覆訊息
     LINE_BOT.reply_message(event.reply_token, message)
+    
+    
+#-------------------------------------------
+
+@HANDLER.add(MessageEvent, message=ImageMessage)
+def handle_content_message(event):
+    # 先把傳來的照片存檔
+    filename = "{}.jpg".format(event.message.id)
+    message_content = LINE_BOT.get_message_content(
+      event.message.id)
+    with open(filename, "wb") as f_w:
+        for chunk in message_content.iter_content():
+            f_w.write(chunk)
+    f_w.close()
+
+    # 將取得照片的網路連結
+    image = IMGUR_CLIENT.image_upload(filename, "", "")
+    link = image["response"]["data"]["link"]
+    
+    # 回覆訊息[test]
+    LINE_BOT.reply_message(event.reply_token, link)
+    
+    
+    
+    
+    
+    
     
 if __name__=='__main__':
     app.run()
