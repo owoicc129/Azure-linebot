@@ -37,6 +37,13 @@ KEY = os.getenv("Azure_face_key")
 ENDPOINT = os.getenv("Azure_face_Endpoint")  
 FACE_CLIENT = FaceClient(ENDPOINT, CognitiveServicesCredentials(KEY))
 
+#Azure ORC
+SUBSCRIPTION_KEY = os.getenv("Azure_ORC_sUBSCRIPTION_KEY")
+ENDPOINT = os.getenv("Azure_ORC_ENDPOINT")
+CV_CLIENT = ComputerVisionClient(
+    ENDPOINT, CognitiveServicesCredentials(SUBSCRIPTION_KEY)
+)
+
 #Imgur
 IMGUR_CONFIG = {
   "client_id": os.getenv("imgur_client_id"),
@@ -140,7 +147,7 @@ def azure_describe(url):
         )
     return output
 
-    
+
 
 #--linebot-------------------------------
 
