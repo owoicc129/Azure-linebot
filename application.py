@@ -12,7 +12,7 @@ import os
 from imgur_python import Imgur
 import sys
 import time
-import datetime.datetime
+from datetime import datetime, timezone, timedelta
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 import json
