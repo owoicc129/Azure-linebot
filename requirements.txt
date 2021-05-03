@@ -4,6 +4,5 @@ click==6.7
 line-bot-sdk
 azure-cognitiveservices-vision-computervision
 azure.cognitiveservices.vision.face
-msrest.authentication
 imgur-python
 Pillow
