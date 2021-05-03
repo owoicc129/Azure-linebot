@@ -8,6 +8,22 @@ from linebot.models import (
     FlexSendMessage
 )
 import os
+from imgur_python import Imgur
+import sys
+import time
+from io import BytesIO
+from PIL import Image, ImageDraw, ImageFont
+import json
+import requests
+from azure.cognitiveservices.vision.face import FaceClient
+from msrest.authentication import CognitiveServicesCredentials
+from azure.cognitiveservices.vision.face.models import TrainingStatusType
+from azure.cognitiveservices.vision.computervision \
+import ComputerVisionClient
+from msrest.authentication import CognitiveServicesCredentials
+from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
+
+
 
 #Line
 LINE_SECRET = os.getenv("secert")
@@ -16,10 +32,10 @@ LINE_BOT = LineBotApi(LINE_TOKEN)
 HANDLER = WebhookHandler(LINE_SECRET)
 
 #Azure
-#KEY = os.getenv("Azure_face_key") 
-#ENDPOINT = os.getenv("Azure_face_Endpoint")  
-#FACE_CLIENT = FaceClient(
-#  ENDPOINT, CognitiveServicesCredentials(KEY))
+KEY = os.getenv("Azure_face_key") 
+ENDPOINT = os.getenv("Azure_face_Endpoint")  
+FACE_CLIENT = FaceClient(
+  ENDPOINT, CognitiveServicesCredentials(KEY))
 
 #Imgur
 IMGUR_CONFIG = {
