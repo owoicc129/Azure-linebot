@@ -53,6 +53,7 @@ IMGUR_CONFIG = {
 }
 IMGUR_CLIENT = Imgur(config=IMGUR_CONFIG)
 
+
 #--def----------------------------------------------------
 
 def azure_face_recognition(filename):
@@ -181,11 +182,17 @@ def handle_message(event):
 # 將要發出去的文字變成TextSendMessage
     try:
         url = url_dict[event.message.text.upper()]
-        message = TextSendMessage(text=url)
+        with open(filename, "r") as f_r:
+            bubble = json.load(f_r)
+        f_r.close()
+        LINE_BOT.reply_message(
+            event.reply_token,
+            [FlexSendMessage(alt_text="Information", contents=bubble)],
+        )
     except:
         message = TextSendMessage(text=event.message.text)
-# 回覆訊息
-    LINE_BOT.reply_message(event.reply_token, message)
+    # 回覆訊息
+        LINE_BOT.reply_message(event.reply_token, message)
     
     
 #-------------------------------------------
@@ -225,6 +232,16 @@ def handle_content_message(event):
         link = link_ob
     
     
+    with open("templates/detect_result.json", "r") as f_r:
+        bubble = json.load(f_r)
+    f_r.close()
+    bubble["body"]["contents"][0]["contents"][0]["contents"][0]["text"] = output
+    bubble["header"]["contents"][0]["contents"][0]["contents"][0]["url"] = link
+    LINE_BOT.reply_message(
+        event.reply_token, [FlexSendMessage(alt_text="Report", contents=bubble)]
+    )
+
+
     
     # 回覆訊息[ok!]
     LINE_BOT.reply_message(event.reply_token, TextSendMessage(text=output))
