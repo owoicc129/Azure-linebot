@@ -193,6 +193,7 @@ def handle_message(event):
         #     event.reply_token,
         #     [FlexSendMessage(alt_text="Information", contents=bubble)],
         # )
+        
     except:
         message = TextSendMessage(text=event.message.text)
     # 回覆訊息
