@@ -176,15 +176,15 @@ def callback():
 # message 可以針對收到的訊息種類
 @HANDLER.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    # url_dict = {
-    #   "TIBAME":"https://www.tibame.com/coursegoodjob/traffic_cli", 
-    #   "HELP":"https://developers.line.biz/zh-hant/docs/messaging-api/"}
-    json_file = {"TIBAME": "templates/tibame.json", "HELP": "templates/help.json"}
+    url_dict = {
+      "TIBAME":"https://www.tibame.com/coursegoodjob/traffic_cli", 
+      "HELP":"https://developers.line.biz/zh-hant/docs/messaging-api/"}
+    # json_file = {"TIBAME": "templates/tibame.json", "HELP": "templates/help.json"}
 
     # 將要發出去的文字變成TextSendMessage
     try:
-        # url = url_dict[event.message.text.upper()]
-        filename = json_file[event.message.text.upper()]
+        url = url_dict[event.message.text.upper()]
+        # filename = json_file[event.message.text.upper()]
         with open(filename, "r") as f_r:
             bubble = json.load(f_r)
         f_r.close()
