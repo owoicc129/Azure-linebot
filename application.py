@@ -83,13 +83,11 @@ def azure_face_recognition(filename):
 def azure_ocr(url):
 
     ocr_results = CV_CLIENT.read(url, raw=True)
-    operation_location_remote = \
-    ocr_results.headers["Operation-Location"]
+    operation_location_remote = ocr_results.headers["Operation-Location"]
     operation_id = operation_location_remote.split("/")[-1]
     status = ["notStarted", "running"]
     while True:
-        get_handw_text_results = \
-        CV_CLIENT.get_read_result(operation_id)
+        get_handw_text_results = CV_CLIENT.get_read_result(operation_id)
         if get_handw_text_results.status not in status:
             break
         time.sleep(1)
@@ -97,55 +95,55 @@ def azure_ocr(url):
     text = []
     succeeded = OperationStatusCodes.succeeded
     if get_handw_text_results.status == succeeded:
-        res = get_handw_text_results.\
-        analyze_result.read_results
+        res = get_handw_text_results.analyze_result.read_results
         for text_result in res:
             for line in text_result.lines:
                 if len(line.text) <= 8:
                     text.append(line.text)
+                    
     # 利用 Regular Expresion (正規表示法) 針對台灣車牌的規則過濾
     r = re.compile("[0-9A-Z]{2,4}[.-]{1}[0-9A-Z]{2,4}")
     text = list(filter(r.match, text))
     return text[0].replace(".", "-") if len(text) > 0 else ""
 
 
-def azure_object_detection(url, filename):
-    img = Image.open(filename)
-    draw = ImageDraw.Draw(img)
-    font_size = int(5e-2 * img.size[1])
-    fnt = ImageFont.truetype(
-      "static/TaipeiSansTCBeta-Regular.ttf", size=font_size)
-    object_detection = CV_CLIENT.detect_objects(url)
-    if len(object_detection.objects) > 0:
-        for obj in object_detection.objects:
-            left = obj.rectangle.x
-            top = obj.rectangle.y
-            right = obj.rectangle.x + obj.rectangle.w
-            bot = obj.rectangle.y + obj.rectangle.h
-            name = obj.object_property
-            confidence = obj.confidence
+# def azure_object_detection(url, filename):
+#     img = Image.open(filename)
+#     draw = ImageDraw.Draw(img)
+#     font_size = int(5e-2 * img.size[1])
+#     fnt = ImageFont.truetype(
+#       "static/TaipeiSansTCBeta-Regular.ttf", size=font_size)
+#     object_detection = CV_CLIENT.detect_objects(url)
+#     if len(object_detection.objects) > 0:
+#         for obj in object_detection.objects:
+#             left = obj.rectangle.x
+#             top = obj.rectangle.y
+#             right = obj.rectangle.x + obj.rectangle.w
+#             bot = obj.rectangle.y + obj.rectangle.h
+#             name = obj.object_property
+#             confidence = obj.confidence
 
-            # 畫框並標上物件名稱與信心程度
-            draw.rectangle([left, top, right, bot], outline=(255, 0, 0), width=3)
-            draw.text([left, top + font_size],"{} {}".format(name, confidence),fill=(255, 0, 0),font=fnt)
+#             # 畫框並標上物件名稱與信心程度
+#             draw.rectangle([left, top, right, bot], outline=(255, 0, 0), width=3)
+#             draw.text([left, top + font_size],"{} {}".format(name, confidence),fill=(255, 0, 0),font=fnt)
 
-    # 把畫完的結果存檔，利用 imgur 把檔案轉成網路連結
-    img.save(filename)
-    image = IMGUR_CLIENT.image_upload(filename, "", "")
-    link = image["response"]["data"]["link"]
-    # 最後刪掉圖檔
-    os.remove(filename)
-    return link
+#     # 把畫完的結果存檔，利用 imgur 把檔案轉成網路連結
+#     img.save(filename)
+#     image = IMGUR_CLIENT.image_upload(filename, "", "")
+#     link = image["response"]["data"]["link"]
+#     # 最後刪掉圖檔
+#     os.remove(filename)
+#     return link
 
 
-def azure_describe(url):
-    description_results = CV_CLIENT.describe_image(url)
-    output = ""
-    for caption in description_results.captions:
-        output += "'{}' with confidence {:.2f}% \n".format(
-            caption.text, caption.confidence * 100
-        )
-    return output
+# def azure_describe(url):
+#     description_results = CV_CLIENT.describe_image(url)
+#     output = ""
+#     for caption in description_results.captions:
+#         output += "'{}' with confidence {:.2f}% \n".format(
+#             caption.text, caption.confidence * 100
+#         )
+#     return output
 
 
 
@@ -217,14 +215,14 @@ def handle_content_message(event):
         
     else:
         plate = azure_ocr(link)
-        link_ob = azure_object_detection(link, filename)
+        # link_ob = azure_object_detection(link, filename)
         # 有車牌就輸出車牌
         if len(plate) > 0:
             output = "License Plate: {}".format(plate)
-        # 沒有車牌就就輸出影像描述的結果
-        else:
-            output = azure_describe(link)
-        link = link_ob
+        # # 沒有車牌就就輸出影像描述的結果
+        # else:
+        #     output = azure_describe(link)
+        # link = link_ob
     
     
     
