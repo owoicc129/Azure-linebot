@@ -235,11 +235,14 @@ def handle_content_message(event):
         link = link_ob
     
 
-    with open("templates/detect_result.json", "r") as f_r:
+    with open("templates/try.json", "r") as f_r:
         bubble = json.load(f_r)
     f_r.close()
-    bubble["body"]["contents"][0]["contents"][0]["contents"][0]["text"] = output
-    bubble["header"]["contents"][0]["contents"][0]["contents"][0]["url"] = link
+    # bubble["body"]["contents"][0]["contents"][0]["contents"][0]["text"] = output
+    # bubble["header"]["contents"][0]["contents"][0]["contents"][0]["url"] = link
+    bubble["body"]["contents"][0]["contents"][0]['url'] = link
+    bubble["body"]["contents"][1]["contents"][0]["contents"][0]["contents"][2]['text']= output
+
     LINE_BOT.reply_message(
         event.reply_token, [FlexSendMessage(alt_text="Report", contents=bubble)]
     )
