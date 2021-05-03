@@ -47,6 +47,8 @@ IMGUR_CLIENT = Imgur(config=IMGUR_CONFIG)
 #--def----------------------------------------------------
 
 def azure_face_recognition(filename):
+    PERSON_GROUP_ID = "tibame1"
+    
     img = open(filename, "r+b")
     detected_face = FACE_CLIENT.face.detect_with_stream(img, detection_model="detection_01")
     # 多於一張臉的情況
