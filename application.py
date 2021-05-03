@@ -184,6 +184,7 @@ def handle_message(event):
     try:
         url = url_dict[event.message.text.upper()]
         message = TextSendMessage(text=url)
+        LINE_BOT.reply_message(event.reply_token, message)
 
     except:
         message = TextSendMessage(text=event.message.text)
