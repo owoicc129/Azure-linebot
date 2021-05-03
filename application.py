@@ -184,14 +184,15 @@ def handle_message(event):
     # 將要發出去的文字變成TextSendMessage
     try:
         url = url_dict[event.message.text.upper()]
+        message = TextSendMessage(text=url)
         # filename = json_file[event.message.text.upper()]
-        with open(filename, "r") as f_r:
-            bubble = json.load(f_r)
-        f_r.close()
-        LINE_BOT.reply_message(
-            event.reply_token,
-            [FlexSendMessage(alt_text="Information", contents=bubble)],
-        )
+        # with open(filename, "r") as f_r:
+        #     bubble = json.load(f_r)
+        # f_r.close()
+        # LINE_BOT.reply_message(
+        #     event.reply_token,
+        #     [FlexSendMessage(alt_text="Information", contents=bubble)],
+        # )
     except:
         message = TextSendMessage(text=event.message.text)
     # 回覆訊息
