@@ -103,7 +103,7 @@ def handle_content_message(event):
     link = image["response"]["data"]["link"]
     
     # 回覆訊息[test]
-    LINE_BOT.reply_message(event.reply_token, link)
+    LINE_BOT.reply_message(event.reply_token, TextSendMessage(text=link))
     
     
     
