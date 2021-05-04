@@ -210,7 +210,6 @@ def handle_content_message(event):
     link = image["response"]["data"]["link"]
     
     
-    #[ok]
     name = azure_face_recognition(filename)
     if name != "": # 如果只有一張人臉，輸出人臉辨識結果
         now = datetime.now(timezone(timedelta(hours=8))).\
@@ -229,7 +228,7 @@ def handle_content_message(event):
         link = link_ob
     
 
-    with open("templates/try.json", "r") as f_r:
+    with open("templates/result.json", "r") as f_r:
         bubble = json.load(f_r)
     f_r.close()
     # bubble["body"]["contents"][0]["contents"][0]["contents"][0]["text"] = output
@@ -243,7 +242,7 @@ def handle_content_message(event):
 
 
     
-    # 回覆訊息[ok!]
+    # 回覆訊息
     LINE_BOT.reply_message(event.reply_token, TextSendMessage(text=output))
     
     
